@@ -1,7 +1,7 @@
 # Joe Sandbox MCP Server
 
-A Model Context Protocol (MCP) server for interacting with [Joe Sandbox](https://jbxcloud.joesecurity.org/).  
-This server exposes rich analysis and IOC extraction capabilities from Joe Sandbox reports and integrates cleanly into any MCP-compatible application (e.g. Claude Desktop, Glama, or custom LLM agents).
+A Model Context Protocol (MCP) server for interacting with [Joe Sandbox Cloud](https://jbxcloud.joesecurity.org/).  
+This server exposes rich analysis and IOC extraction capabilities from Joe Sandbox  and integrates cleanly into any MCP-compatible application (e.g. Claude Desktop, Glama, or custom LLM agents).
 
 ## Features
 
