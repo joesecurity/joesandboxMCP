@@ -9,6 +9,8 @@ This server exposes rich analysis and IOC extraction capabilities from Joe Sandb
 - **IOC Extraction**: Retrieve indicators of compromise for dropped files, IPs, domains, and URLs.
 - **Signature Detections**: Retrieve and extract actionable evidence from sandbox signatures.
 - **Process Trees**: Visualize full execution hierarchies, including command lines and parent-child relationships.
+- **Unpacked PE Files**: Download in-memory unpacked binaries extracted during execution, often revealing runtime payloads.
+- **PCAP Downloads**: Retrieve the full network traffic capture (PCAP) recorded during analysis for offline inspection.
 - **LLM-Suitable Responses**: All results are structured for clear consumption by language models, with truncation and relevant filtering.
 
 
@@ -34,9 +36,7 @@ This server exposes rich analysis and IOC extraction capabilities from Joe Sandb
 
 ---
 
-## Claude Desktop Configuration
-
-To use this server inside **Claude Desktop**, add the following entry to your configuration file:
+## Example Configuration
 
 ```json
 {
@@ -50,12 +50,19 @@ To use this server inside **Claude Desktop**, add the following entry to your co
         "main.py"
       ],
       "env": {
-        "JBXAPIKEY": "your-jbxcloud-apikey"
+        "JBXAPIKEY": "your-jbxcloud-apikey",
+        "ACCEPTTAC": "SET_TRUE_IF_YOU_ACCEPT"
       }
     }
   }
 }
 ```
+
+## Legal Notice
+
+Use of this integration with Joe Sandbox Cloud requires acceptance of the Joe Security Terms and Conditions.
+
+By setting the environment variable `ACCEPTTAC=TRUE`, you explicitly confirm that you have read and accepted the [Terms and Conditions](https://jbxcloud.joesecurity.org/resources/termsandconditions.pdf).
 
 **Config file location:**
 
