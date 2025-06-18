@@ -1,0 +1,14 @@
+[project]
+name = "joesandboxMCP"
+version = "0.1.0"
+description = "A Model Context Protocol server for Joe Sandbox Cloud integration"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "Joe Security LLC"}
+]
+dependencies = [
+    "httpx>=0.28.1",
+    "jbxapi>=3.23.0",
+    "mcp[cli]>=1.9.3",
+]
