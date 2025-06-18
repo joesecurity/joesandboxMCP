@@ -48,7 +48,7 @@ def initialize_client():
     JBXAPIKEY = os.getenv("JBXAPIKEY")
     
     if not JBXAPIKEY:
-        raise ValueError("JBXAPIKEY environment variable is not set. Please set it in your .env file.")
+        raise ValueError("JBXAPIKEY environment variable is not set.")
     
     # Initialize the client
     jbx_client = jbxapi.JoeSandbox(
