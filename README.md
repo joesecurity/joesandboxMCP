@@ -64,13 +64,6 @@ Use of this integration with Joe Sandbox Cloud requires acceptance of the Joe Se
 
 By setting the environment variable `ACCEPTTAC=TRUE`, you explicitly confirm that you have read and accepted the [Terms and Conditions](https://jbxcloud.joesecurity.org/resources/termsandconditions.pdf).
 
-**Config file location:**
-
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%\\Claude\\claude_desktop_config.json`
-
-Replace `"your-jbxcloud-apikey"` with your actual Joe Sandbox Cloud API key.
-
 ---
 
 ## Available Tools
