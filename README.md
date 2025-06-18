@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./logo.png" alt="Joe Sandbox MCP banner">
+</p>
+
 # Joe Sandbox MCP Server
 
 A Model Context Protocol (MCP) server for interacting with [Joe Sandbox Cloud](https://jbxcloud.joesecurity.org/).  
