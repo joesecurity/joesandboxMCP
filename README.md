@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./logo.png" alt="Joe Sandbox MCP banner">
+  <img src="./assets/logo.png" alt="Joe Sandbox MCP banner">
 </p>
 
 # Joe Sandbox MCP Server
