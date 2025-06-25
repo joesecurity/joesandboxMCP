@@ -122,6 +122,9 @@ List your most recent sandbox submissions and see what systems they ran on, how 
 ### 14. Memory Dumps
 Retrieve raw memory dumps captured during runtime.
 
+### 15. Dropped Files
+Retrieve all files dropped during analysis.
+
 ---
 
 ## License

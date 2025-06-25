@@ -12,7 +12,8 @@ __all__ = [
     'download_pcap_file',
     'list_recent_analyses',
     'get_indicators',
-    'download_memory_dumps'
+    'download_memory_dumps',
+    'download_dropped_files'
 ]
 
 import os
@@ -469,13 +470,13 @@ async def download_memory_dumps(
 
     _, data = jbx_client.analysis_download(webid=webid, run=run, type="memdumps")
 
-    default_output_dir = os.path.join("memdumps", webid)
+    default_output_dir = os.path.join("memdumps", f"{webid}-{run}")
     output_dir = default_output_dir
     used_default_path = False
 
     if save_path:
         try:
-            output_dir = os.path.join(save_path, "memdumps", webid)
+            output_dir = os.path.join(save_path, "memdumps", f"{webid}-{run}")
             os.makedirs(output_dir, exist_ok=True)
         except (OSError, FileNotFoundError):
             output_dir = default_output_dir
@@ -501,6 +502,51 @@ async def download_memory_dumps(
 
     return {
         "output_directory": os.path.abspath(output_dir),
-        "info": f"Extracted {len(extracted_files)} memdumps",
+        "info": f"{len(extracted_files)} memory dumps downloaded",
+        "note": note,
+    }
+
+async def download_dropped_files(
+    webid: str,
+    run: Optional[int] = 0,
+    save_path: Optional[str] = None
+) -> Dict[str, Any]:
+    jbx_client = get_client()
+
+    _, data = jbx_client.analysis_download(webid=webid, run=run, type="bins")
+
+    default_output_dir = os.path.join("droppedfiles", f"{webid}-{run}")
+    output_dir = default_output_dir
+    used_default_path = False
+
+    if save_path:
+        try:
+            output_dir = os.path.join(save_path, "droppedfiles", f"{webid}-{run}")
+            os.makedirs(output_dir, exist_ok=True)
+        except (OSError, FileNotFoundError):
+            output_dir = default_output_dir
+            os.makedirs(output_dir, exist_ok=True)
+            used_default_path = True
+    else:
+        os.makedirs(output_dir, exist_ok=True)
+
+    extracted_files: list[str] = []
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        zf.extractall(path=output_dir, pwd=b"infected")
+
+        for name in zf.namelist():
+            if name.endswith("/"):
+                continue
+            extracted_files.append(os.path.abspath(os.path.join(output_dir, name)))
+
+    note = (
+        "User-provided save_path was invalid. Default directory was used."
+        if used_default_path
+        else "Extraction completed successfully."
+    )
+
+    return {
+        "output_directory": os.path.abspath(output_dir),
+        "files": extracted_files,
         "note": note,
     }

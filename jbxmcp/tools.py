@@ -31,7 +31,8 @@ from jbxmcp.core import (
     download_pcap_file,
     list_recent_analyses,
     get_indicators,
-    download_memory_dumps
+    download_memory_dumps,
+    download_dropped_files
 )
 
 @mcp.tool()
@@ -801,7 +802,7 @@ async def get_memory_dumps(webid: str, run: int = 0, save_path: Optional[str] = 
     Returns:
         dict: {
             "output_directory": absolute path to extraction folder,
-            "info": summary of file count,
+            "files": list of files with full path
             "note": status message (e.g. fallback notice)
         }
     """
@@ -810,5 +811,39 @@ async def get_memory_dumps(webid: str, run: int = 0, save_path: Optional[str] = 
     except Exception as e:
         return {
             "error": f"Failed to download memory dumps for submission ID '{webid}' run {run}. "
+                     f"Reason: {str(e)}"
+        }
+
+@mcp.tool()
+async def get_dropped_files(webid: str, run: int = 0, save_path: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Download all dropped files from a Joe Sandbox analysis.
+
+    This tool retrieves the 'dropped' archive from the specified analysis run and extracts
+    all contents into a local directory for further inspection.
+
+    Files are extracted as-is without renaming or classification.
+
+    Output path logic:
+    - If `save_path` is valid, dumps go to `{save_path}/droppedfiles/{webid}`
+    - If not, fallback is `droppedfiles/{webid}` under the current directory
+
+    Args:
+        webid (str): Joe Sandbox analysis ID
+        run (int, optional): Run index (default: 0)
+        save_path (str, optional): Optional base path to save dumps
+
+    Returns:
+        dict: {
+            "output_directory": absolute path to extraction folder,
+            "files": list of files with full path
+            "note": status message (e.g. fallback notice)
+        }
+    """
+    try:
+        return await download_dropped_files(webid, run, save_path)
+    except Exception as e:
+        return {
+            "error": f"Failed to download dropped files for submission ID '{webid}' run {run}. "
                      f"Reason: {str(e)}"
         }
