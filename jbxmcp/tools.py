@@ -802,7 +802,7 @@ async def get_memory_dumps(webid: str, run: int = 0, save_path: Optional[str] = 
     Returns:
         dict: {
             "output_directory": absolute path to extraction folder,
-            "files": list of files with full path
+            "info": "Info string detailing how many memory dumps were downloaded"
             "note": status message (e.g. fallback notice)
         }
     """
