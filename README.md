@@ -119,6 +119,9 @@ Useful for traffic inspection, C2 callbacks, or domain/IP extraction.
 ### 13. Recent Activity  
 List your most recent sandbox submissions and see what systems they ran on, how they scored, and what verdicts were returned.
 
+### 14. Memory Dumps
+Retrieve raw memory dumps captured during runtime.
+
 ---
 
 ## License

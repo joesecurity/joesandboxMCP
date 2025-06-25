@@ -9,6 +9,7 @@ wheels/
 .vscode
 unpacked_files
 pcap
+memdumps
 
 # Virtual environments
 .venv

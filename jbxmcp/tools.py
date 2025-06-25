@@ -12,7 +12,8 @@ __all__ = [
     'get_unpacked_files',
     'get_pcap_file',
     'get_list_of_recent_analyses',
-    'get_process_info'
+    'get_process_info',
+    'get_memory_dumps'
 ]
 
 from typing import Any, Dict, List, Optional
@@ -29,7 +30,8 @@ from jbxmcp.core import (
     download_unpacked_files,
     download_pcap_file,
     list_recent_analyses,
-    get_indicators
+    get_indicators,
+    download_memory_dumps
 )
 
 @mcp.tool()
@@ -774,3 +776,39 @@ async def get_list_of_recent_analyses(limit: int = 20) -> List[Dict[str, Any]]:
         A list of dictionaries summarizing each recent analysis.
     """
     return await asyncio.to_thread(list_recent_analyses, limit)
+
+
+@mcp.tool()
+async def get_memory_dumps(webid: str, run: int = 0, save_path: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Download and extract memory dumps from a Joe Sandbox analysis.
+
+    This tool retrieves the 'memdumps' archive from the specified analysis run and extracts
+    all contents into a local directory for further inspection. These files represent raw 
+    memory snapshots taken during execution.
+
+    Files are extracted as-is without renaming or classification.
+
+    Output path logic:
+    - If `save_path` is valid, dumps go to `{save_path}/memdumps/{webid}`
+    - If not, fallback is `memdumps/{webid}` under the current directory
+
+    Args:
+        webid (str): Joe Sandbox analysis ID
+        run (int, optional): Run index (default: 0)
+        save_path (str, optional): Optional base path to save dumps
+
+    Returns:
+        dict: {
+            "output_directory": absolute path to extraction folder,
+            "info": summary of file count,
+            "note": status message (e.g. fallback notice)
+        }
+    """
+    try:
+        return await download_memory_dumps(webid, run, save_path)
+    except Exception as e:
+        return {
+            "error": f"Failed to download memory dumps for submission ID '{webid}' run {run}. "
+                     f"Reason: {str(e)}"
+        }

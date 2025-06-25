@@ -11,7 +11,8 @@ __all__ = [
     'download_unpacked_files',
     'download_pcap_file',
     'list_recent_analyses',
-    'get_indicators'
+    'get_indicators',
+    'download_memory_dumps'
 ]
 
 import os
@@ -457,3 +458,49 @@ def get_indicators(xml_element: ET.Element, only_malicious_indicators: bool) -> 
             }
             indicators.append(indicator)
     return indicators
+
+
+async def download_memory_dumps(
+    webid: str,
+    run: Optional[int] = 0,
+    save_path: Optional[str] = None
+) -> Dict[str, Any]:
+    jbx_client = get_client()
+
+    _, data = jbx_client.analysis_download(webid=webid, run=run, type="memdumps")
+
+    default_output_dir = os.path.join("memdumps", webid)
+    output_dir = default_output_dir
+    used_default_path = False
+
+    if save_path:
+        try:
+            output_dir = os.path.join(save_path, "memdumps", webid)
+            os.makedirs(output_dir, exist_ok=True)
+        except (OSError, FileNotFoundError):
+            output_dir = default_output_dir
+            os.makedirs(output_dir, exist_ok=True)
+            used_default_path = True
+    else:
+        os.makedirs(output_dir, exist_ok=True)
+
+    extracted_files: list[str] = []
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        zf.extractall(path=output_dir)
+
+        for name in zf.namelist():
+            if name.endswith("/"):
+                continue
+            extracted_files.append(os.path.abspath(os.path.join(output_dir, name)))
+
+    note = (
+        "User-provided save_path was invalid. Default directory was used."
+        if used_default_path
+        else "Extraction completed successfully."
+    )
+
+    return {
+        "output_directory": os.path.abspath(output_dir),
+        "info": f"Extracted {len(extracted_files)} memdumps",
+        "note": note,
+    }
