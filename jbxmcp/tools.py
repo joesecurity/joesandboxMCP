@@ -149,19 +149,33 @@ async def submit_analysis_job(
     return result
 
 @mcp.tool()
-async def search_analysis(query: Dict[str, str]) -> str:
+async def search_analysis(
+    md5: Optional[str] = None,
+    sha1: Optional[str] = None,
+    sha256: Optional[str] = None,
+    filename: Optional[str] = None,
+    url: Optional[str] = None,
+    tag: Optional[str] = None,
+    comments: Optional[str] = None,
+    ioc_url: Optional[str] = None,
+    ioc_dropped_file: Optional[str] = None,
+    detection: Optional[Literal["clean", "suspicious", "malicious", "unknown"]] = None,
+    threatname: Optional[str] = None,
+    before_date: Optional[str] = None,
+    after_date: Optional[str] = None,
+    ioc_domain: Optional[str] = None,
+    ioc_public_ip: Optional[str] = None,
+    ) -> str:
     """
     Search the JoeSandbox Cloud for malware analyses using structured search parameters.
 
     Args:
-        query: A dictionary containing one or more of the following parameters:
-
-            - md5, sha1, sha256: Exact match
-            - filename, url, tag, comments, ioc-url, ioc-dropped-file: Substring match
-            - detection: One of 'clean', 'suspicious', 'malicious', 'unknown'
-            - threatname: Exact match
-            - before-date, after-date: ISO 8601 format (YYYY-MM-DD). These are exclusive (the date itself is not included).
-            - ioc-domain, ioc-public-ip: Exact match
+        - md5, sha1, sha256: Exact match
+        - filename, url, tag, comments, ioc_url, ioc_dropped-file: Substring match
+        - detection: One of 'clean', 'suspicious', 'malicious', 'unknown'
+        - threatname: Exact match
+        - before_date, after-date: ISO 8601 format (YYYY-MM-DD). These are exclusive (the date itself is not included).
+        - ioc_domain, ioc_public_ip: Exact match
 
         Notes:
             - You must provide at least one of the supported parameters.
@@ -172,9 +186,14 @@ async def search_analysis(query: Dict[str, str]) -> str:
 
         Examples:
             {"md5": "661f3e4454258ca6ab1a4c31742916c0"}
-            {"threatname": "agenttesla", "before-date": "2024-12-01"}
+            {"threatname": "agenttesla", "before_date": "2024-12-01"}
             {"filename": "agent.exe", "detection": "malicious"}
     """
+    query = {
+        k.replace('_', '-'): v
+        for k, v in locals().items()
+        if v is not None and k != "self"
+    }
     res = await make_search_request(query)
     if not res:
         return "No results or an error occurred during the search."
