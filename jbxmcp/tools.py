@@ -16,7 +16,7 @@ __all__ = [
     'get_memory_dumps'
 ]
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Literal
 import xml.etree.ElementTree as ET
 import asyncio
 
